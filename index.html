@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Football Game</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, sans-serif;
+    }
+
+    #game {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #score {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      background: rgba(0,0,0,0.65);
+      padding: 10px 25px;
+      border-radius: 10px;
+      font-size: 20px;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="score">HOME 0 - 0 AWAY</div>
+  <div id="game"></div>
+
+  <script type="module">
+    import * as THREE from
+      "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+
+    // Scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x87ceeb);
+
+    // Camera
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+
+    camera.position.set(0, 14, 18);
+    camera.lookAt(0, 0, 0);
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    document.getElementById("game").appendChild(renderer.domElement);
+
+    // Lights
+    const light = new THREE.DirectionalLight(0xffffff, 2);
+    light.position.set(10, 20, 10);
+    scene.add(light);
+
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambient);
+
+    // Football pitch
+    const pitchGeometry = new THREE.BoxGeometry(20, 0.2, 12);
+
+    const pitchMaterial = new THREE.MeshStandardMaterial({
+      color: 0x168a35
+    });
+
+    const pitch = new THREE.Mesh(
+      pitchGeometry,
+      pitchMaterial
+    );
+
+    pitch.position.y = -0.1;
+    scene.add(pitch);
+
+    // Centre circle
+    const circleGeometry = new THREE.RingGeometry(1.5, 1.55, 64);
+
+    const lineMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      side: THREE.DoubleSide
+    });
+
+    const centreCircle = new THREE.Mesh(
+      circleGeometry,
+      lineMaterial
+    );
+
+    centreCircle.rotation.x = -Math.PI / 2;
+    centreCircle.position.y = 0.02;
+    scene.add(centreCircle);
+
+    // Centre line
+    const centreLineGeometry = new THREE.BoxGeometry(
+      0.05,
+      0.03,
+      12
+    );
+
+    const centreLine = new THREE.Mesh(
+      centreLineGeometry,
+      lineMaterial
+    );
+
+    centreLine.position.y = 0.02;
+    scene.add(centreLine);
+
+    // Player
+    const playerGeometry = new THREE.CapsuleGeometry(
+      0.35,
+      1,
+      8,
+      16
+    );
+
+    const playerMaterial = new THREE.MeshStandardMaterial({
+      color: 0x0066ff
+    });
+
+    const player = new THREE.Mesh(
+      playerGeometry,
+      playerMaterial
+    );
+
+    player.position.set(0, 0.8, 3);
+    scene.add(player);
+
+    // Football
+    const ballGeometry = new THREE.SphereGeometry(
+      0.25,
+      32,
+      32
+    );
+
+    const ballMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff
+    });
+
+    const ball = new THREE.Mesh(
+      ballGeometry,
+      ballMaterial
+    );
+
+    ball.position.set(0, 0.25, 1.8);
+    scene.add(ball);
+
+    // Animation
+    function animate() {
+      requestAnimationFrame(animate);
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Resize
+    window.addEventListener("resize", () => {
+      camera.aspect =
+        window.innerWidth / window.innerHeight;
+
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+      );
+    });
+  </script>
+
+</body>
+</html>
