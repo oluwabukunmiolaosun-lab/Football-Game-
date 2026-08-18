@@ -146,6 +146,19 @@
     player.position.set(0, 0.8, 3);
     scene.add(player);
 
+// Opponent
+const opponentMaterial = new THREE.MeshStandardMaterial({
+  color: 0xff2222
+});
+
+const opponent = new THREE.Mesh(
+  playerGeometry,
+  opponentMaterial
+);
+
+opponent.position.set(0, 0.8, -3);
+scene.add(opponent);
+    
     // Football
     const ballGeometry = new THREE.SphereGeometry(
       0.25,
